@@ -17,6 +17,10 @@ app.use(express.json());
 // Get all bands, ordered by createdAt, latest first
 app.get('/bands/latest', async (req, res, next) => {
     const bands = await Band.findAll({ 
+        attributes: ['name'],
+        order: [
+            ['createdAt', 'DESC']
+          ]
         // Your code here
     });
     res.json(bands);
@@ -26,7 +30,9 @@ app.get('/bands/latest', async (req, res, next) => {
 // Get all musicians, ordered by last name, then first name, alphabetically
 app.get('/musicians/alphabetic', async (req, res, next) => {
     const musicians = await Musician.findAll({ 
-        // Your code here
+        order: [
+            ['firstName'],  ['lastName']
+        ]
     });
     res.json(musicians);
 })
@@ -37,7 +43,11 @@ app.get('/musicians/alphabetic', async (req, res, next) => {
 app.get('/bands/alphabetic-musicians', async (req, res, next) => {
     const bands = await Band.findAll({ 
         include: { model: Musician }, 
-        // Your code here
+        order: [
+            ['name'],
+            [Musician, 'lastName'], 
+            [Musician, 'firstName']
+        ]
     })
     res.json(bands);
 })
@@ -51,5 +61,5 @@ app.get('/', (req, res) => {
 });
 
 // Set port and listen for incoming requests - DO NOT MODIFY
-const port = 5000;
+const port = 5005;
 app.listen(port, () => console.log('Server is listening on port', port));
