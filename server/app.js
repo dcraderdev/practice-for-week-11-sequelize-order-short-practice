@@ -42,7 +42,9 @@ app.get('/musicians/alphabetic', async (req, res, next) => {
 // name, then first name, alphabetically
 app.get('/bands/alphabetic-musicians', async (req, res, next) => {
     const bands = await Band.findAll({ 
-        include: { model: Musician }, 
+        // include: { model: Musician, attributes: ['lastName'] }, 
+        include: [{ model: Musician, attributes: ['lastName'], order: [['lastName']] }],
+        attributes: [Musician,'lastName'],
         order: [
             ['name'],
             [Musician, 'lastName'], 
